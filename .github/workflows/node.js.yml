@@ -5,35 +5,28 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "master", "github-action" ]
+    branches: [ "github-action" ]
   pull_request:
-    branches: [ "master", "github-action" ]
+    branches: [ "github-action" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 20
         cache: 'npm'
-    # - run: echo "node_modules/.bin" >> $GITHUB_PATH
     - run: npm install --legacy-peer-deps pinia
     - run: npm i
     - run: npm run build --if-present
     #- run: npm test
 
     - name: Archive build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts
+        name: build-output
         path: .output  # Specify the path to the artifacts yo
